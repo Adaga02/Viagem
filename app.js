@@ -1,18 +1,20 @@
-// ==================================================================
-//  APP.JS - O CÉREBRO DO SEU SITE DE VIAGENS
-//  Escrito por Manus para funcionar com seu HTML e Firebase
-// ==================================================================
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// --- PASSO 1: CONFIGURAÇÃO DO FIREBASE ---
-// ATENÇÃO: Substitua pelo seu NOVO firebaseConfig.
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "SUA_NOVA_API_KEY_AQUI",
-  authDomain: "SEU_NOVO_AUTH_DOMAIN_AQUI",
-  projectId: "SEU_NOVO_PROJECT_ID_AQUI",
-  storageBucket: "SEU_NOVO_STORAGE_BUCKET_AQUI",
-  messagingSenderId: "SEU_NOVO_SENDER_ID_AQUI",
-  appId: "SEU_NOVO_APP_ID_AQUI"
+  apiKey: "AIzaSyBAKd-2pdUcM2nT2YAAPB0YN8Iq0Ruz0Gw",
+  authDomain: "japao-fb44c.firebaseapp.com",
+  projectId: "japao-fb44c",
+  storageBucket: "japao-fb44c.firebasestorage.app",
+  messagingSenderId: "33547623583",
+  appId: "1:33547623583:web:2dbfe088a05c8ad8fe16aa"
 };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 // --- PASSO 2: INICIALIZAÇÃO ---
 firebase.initializeApp(firebaseConfig);
