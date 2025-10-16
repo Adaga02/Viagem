@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Hospedagens - Viagem Japão &amp; Dubai</title>
+    <title>Sistema de Gerenciamento de Hospedagens</title>
     <style>
         :root {
   /* Primitive Color Tokens */
@@ -212,6 +212,98 @@
   }
 }
 
+/* Data attribute for manual theme switching */
+[data-color-scheme="dark"] {
+  /* RGB versions for opacity control (dark mode) */
+  --color-gray-400-rgb: 119, 124, 124;
+  --color-teal-300-rgb: 50, 184, 198;
+  --color-gray-300-rgb: 167, 169, 169;
+  --color-gray-200-rgb: 245, 245, 245;
+
+  /* Colorful background palette - Dark Mode */
+  --color-bg-1: rgba(29, 78, 216, 0.15); /* Dark blue */
+  --color-bg-2: rgba(180, 83, 9, 0.15); /* Dark yellow */
+  --color-bg-3: rgba(21, 128, 61, 0.15); /* Dark green */
+  --color-bg-4: rgba(185, 28, 28, 0.15); /* Dark red */
+  --color-bg-5: rgba(107, 33, 168, 0.15); /* Dark purple */
+  --color-bg-6: rgba(194, 65, 12, 0.15); /* Dark orange */
+  --color-bg-7: rgba(190, 24, 93, 0.15); /* Dark pink */
+  --color-bg-8: rgba(8, 145, 178, 0.15); /* Dark cyan */
+
+  /* Semantic Color Tokens (Dark Mode) */
+  --color-background: var(--color-charcoal-700);
+  --color-surface: var(--color-charcoal-800);
+  --color-text: var(--color-gray-200);
+  --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+  --color-primary: var(--color-teal-300);
+  --color-primary-hover: var(--color-teal-400);
+  --color-primary-active: var(--color-teal-800);
+  --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+  --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+  --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
+  --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+  --color-error: var(--color-red-400);
+  --color-success: var(--color-teal-300);
+  --color-warning: var(--color-orange-400);
+  --color-info: var(--color-gray-300);
+  --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
+  --color-btn-primary-text: var(--color-slate-900);
+  --color-card-border: rgba(var(--color-gray-400-rgb), 0.15);
+  --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
+  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+  --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
+  --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
+
+  /* Common style patterns - updated for dark mode */
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+  --focus-outline: 2px solid var(--color-primary);
+  --status-bg-opacity: 0.15;
+  --status-border-opacity: 0.25;
+  --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
+  /* RGB versions for dark mode */
+  --color-success-rgb: var(--color-teal-300-rgb);
+  --color-error-rgb: var(--color-red-400-rgb);
+  --color-warning-rgb: var(--color-orange-400-rgb);
+  --color-info-rgb: var(--color-gray-300-rgb);
+}
+
+[data-color-scheme="light"] {
+  /* RGB versions for opacity control (light mode) */
+  --color-brown-600-rgb: 94, 82, 64;
+  --color-teal-500-rgb: 33, 128, 141;
+  --color-slate-900-rgb: 19, 52, 59;
+
+  /* Semantic Color Tokens (Light Mode) */
+  --color-background: var(--color-cream-50);
+  --color-surface: var(--color-cream-100);
+  --color-text: var(--color-slate-900);
+  --color-text-secondary: var(--color-slate-500);
+  --color-primary: var(--color-teal-500);
+  --color-primary-hover: var(--color-teal-600);
+  --color-primary-active: var(--color-teal-700);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+  --color-btn-primary-text: var(--color-cream-50);
+  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-error: var(--color-red-500);
+  --color-success: var(--color-teal-500);
+  --color-warning: var(--color-orange-500);
+  --color-info: var(--color-slate-500);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+
+  /* RGB versions for light mode */
+  --color-success-rgb: var(--color-teal-500-rgb);
+  --color-error-rgb: var(--color-red-500-rgb);
+  --color-warning-rgb: var(--color-orange-500-rgb);
+  --color-info-rgb: var(--color-slate-500-rgb);
+}
+
 /* Base styles */
 html {
   font-size: var(--font-size-base);
@@ -279,6 +371,30 @@ a {
 
 a:hover {
   color: var(--color-primary-hover);
+}
+
+code,
+pre {
+  font-family: var(--font-family-mono);
+  font-size: calc(var(--font-size-base) * 0.95);
+  background-color: var(--color-secondary);
+  border-radius: var(--radius-sm);
+}
+
+code {
+  padding: var(--space-1) var(--space-4);
+}
+
+pre {
+  padding: var(--space-16);
+  margin: var(--space-16) 0;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+}
+
+pre code {
+  background: none;
+  padding: 0;
 }
 
 /* Buttons */
@@ -375,6 +491,11 @@ a:hover {
     box-shadow var(--duration-fast) var(--ease-standard);
 }
 
+textarea.form-control {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}
+
 select.form-control {
   padding: var(--space-8) var(--space-12);
   -webkit-appearance: none;
@@ -385,6 +506,22 @@ select.form-control {
   background-position: right var(--space-12) center;
   background-size: 16px;
   padding-right: var(--space-32);
+}
+
+/* Add a dark mode specific caret */
+@media (prefers-color-scheme: dark) {
+  select.form-control {
+    background-image: var(--select-caret-dark);
+  }
+}
+
+/* Also handle data-color-scheme */
+[data-color-scheme="dark"] select.form-control {
+  background-image: var(--select-caret-dark);
+}
+
+[data-color-scheme="light"] select.form-control {
+  background-image: var(--select-caret-light);
 }
 
 .form-control:focus {
@@ -421,7 +558,13 @@ select.form-control {
   padding: var(--space-16);
 }
 
-/* Status indicators */
+.card__header,
+.card__footer {
+  padding: var(--space-16);
+  border-bottom: 1px solid var(--color-card-border-inner);
+}
+
+/* Status indicators - simplified with CSS variables */
 .status {
   display: inline-flex;
   align-items: center;
@@ -439,6 +582,16 @@ select.form-control {
   color: var(--color-success);
   border: 1px solid
     rgba(var(--color-success-rgb, 33, 128, 141), var(--status-border-opacity));
+}
+
+.status--error {
+  background-color: rgba(
+    var(--color-error-rgb, 192, 21, 47),
+    var(--status-bg-opacity)
+  );
+  color: var(--color-error);
+  border: 1px solid
+    rgba(var(--color-error-rgb, 192, 21, 47), var(--status-border-opacity));
 }
 
 .status--warning {
@@ -517,63 +670,150 @@ select.form-control {
   gap: var(--space-16);
 }
 
+.m-0 {
+  margin: 0;
+}
+.mt-8 {
+  margin-top: var(--space-8);
+}
+.mb-8 {
+  margin-bottom: var(--space-8);
+}
+.mx-8 {
+  margin-left: var(--space-8);
+  margin-right: var(--space-8);
+}
+.my-8 {
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-8);
+}
+
+.p-0 {
+  padding: 0;
+}
+.py-8 {
+  padding-top: var(--space-8);
+  padding-bottom: var(--space-8);
+}
+.px-8 {
+  padding-left: var(--space-8);
+  padding-right: var(--space-8);
+}
+.py-16 {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+.px-16 {
+  padding-left: var(--space-16);
+  padding-right: var(--space-16);
+}
+
+.block {
+  display: block;
+}
 .hidden {
   display: none;
 }
 
-        /* Custom styles */
-        .header {
-            background: var(--color-surface);
-            border-bottom: 1px solid var(--color-card-border);
-            padding: var(--space-16) 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+:focus-visible {
+  outline: var(--focus-outline);
+  outline-offset: 2px;
+}
+
+/* Dark mode specifics */
+[data-color-scheme="dark"] .btn--outline {
+  border: 1px solid var(--color-border-secondary);
+}
+
+@font-face {
+  font-family: 'FKGroteskNeue';
+  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
+    format('woff2');
+}
+
+/* END PERPLEXITY DESIGN SYSTEM */
+
+        /* Custom styles for the accommodation system */
+        .page-header {
+            text-align: center;
+            padding: var(--space-32) 0;
+            background: var(--color-bg-1);
+        }
+
+        .section-title {
+            margin: var(--space-32) 0 var(--space-24) 0;
+            padding-bottom: var(--space-12);
+            border-bottom: 2px solid var(--color-primary);
         }
 
         .city-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: var(--space-20);
-            margin-top: var(--space-24);
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-24);
+            margin-bottom: var(--space-32);
         }
 
         .city-card {
             position: relative;
         }
 
-        .city-card--future {
-            opacity: 0.7;
-        }
-
         .city-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             margin-bottom: var(--space-16);
         }
 
-        .city-title {
-            font-size: var(--font-size-2xl);
+        .city-name {
+            color: var(--color-primary);
             font-weight: var(--font-weight-bold);
         }
 
-        .city-dates {
+        .edit-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            padding: var(--space-4);
+            border-radius: var(--radius-sm);
+            transition: all var(--duration-fast) var(--ease-standard);
+            font-size: var(--font-size-lg);
+        }
+
+        .edit-btn:hover {
+            color: var(--color-primary);
+            background: var(--color-secondary);
+            transform: scale(1.1);
+        }
+
+        .period {
             color: var(--color-text-secondary);
             font-size: var(--font-size-sm);
+            margin-bottom: var(--space-16);
         }
 
-        .hotels-list {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-16);
+        .hotel {
+            border-top: 1px solid var(--color-card-border-inner);
+            padding-top: var(--space-16);
+            margin-bottom: var(--space-16);
         }
 
-        .hotel-card {
-            background: var(--color-bg-1);
-            border-radius: var(--radius-base);
-            padding: var(--space-16);
-            border: 1px solid var(--color-card-border-inner);
+        .hotel:first-child {
+            border-top: none;
+            padding-top: 0;
         }
 
         .hotel-name {
@@ -581,18 +821,23 @@ select.form-control {
             margin-bottom: var(--space-8);
         }
 
-        .rooms-list {
-            display: flex;
-            flex-direction: column;
+        .hotel-period {
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-12);
+        }
+
+        .room-grid {
+            display: grid;
             gap: var(--space-8);
         }
 
-        .room-item {
+        .room {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: start;
             padding: var(--space-8);
-            background: rgba(var(--color-brown-600-rgb), 0.05);
+            background: var(--color-bg-2);
             border-radius: var(--radius-sm);
             font-size: var(--font-size-sm);
         }
@@ -603,707 +848,523 @@ select.form-control {
         }
 
         .room-occupants {
-            color: var(--color-text-secondary);
-            font-size: var(--font-size-xs);
-        }
-
-        .filters-bar {
-            background: var(--color-bg-2);
-            padding: var(--space-16);
-            border-radius: var(--radius-base);
-            margin-bottom: var(--space-20);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--color-surface);
-            border-radius: var(--radius-lg);
-            padding: var(--space-24);
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-20);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: var(--font-size-xl);
-            cursor: pointer;
+            text-align: right;
             color: var(--color-text-secondary);
         }
 
-        .person-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--space-16);
-            margin-top: var(--space-20);
+        .future-city-card {
+            opacity: 0.7;
+            transition: opacity var(--duration-normal) var(--ease-standard);
         }
 
-        .person-stay {
-            background: var(--color-bg-3);
-            padding: var(--space-12);
-            border-radius: var(--radius-base);
-            border: 1px solid var(--color-card-border);
+        .future-city-card:hover {
+            opacity: 1;
         }
 
-        .export-section {
-            margin-top: var(--space-24);
-            padding: var(--space-20);
-            background: var(--color-bg-4);
-            border-radius: var(--radius-lg);
-            text-align: center;
-        }
-
-        .no-data-message {
+        .no-data {
             text-align: center;
             color: var(--color-text-secondary);
             font-style: italic;
-            padding: var(--space-20);
+            padding: var(--space-24);
         }
 
-        @media (max-width: 768px) {
-            .city-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .modal-content {
-                width: 95%;
-                padding: var(--space-16);
-            }
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--color-surface);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal h3 {
+            margin-bottom: var(--space-16);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: var(--space-12);
+            justify-content: flex-end;
+            margin-top: var(--space-16);
+        }
+
+        .error-message {
+            color: var(--color-error);
+            font-size: var(--font-size-sm);
+            margin-top: var(--space-8);
+        }
+
+        .success-message {
+            background: var(--color-bg-3);
+            color: var(--color-success);
+            padding: var(--space-12);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-16);
+            font-size: var(--font-size-sm);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+
+        .success-message.show {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1>🏨 Gerenciador de Hospedagens</h1>
-                    <p style="margin: 0; color: var(--color-text-secondary); font-size: var(--font-size-sm);">Viagem Japão &amp; Dubai • Fevereiro - Março 2025</p>
-                </div>
-                <div class="flex gap-8">
-                    <button class="btn btn--secondary btn--sm" onclick="showAddModal()">+ Nova Hospedagem</button>
-                    <button class="btn btn--outline btn--sm" onclick="showExportModal()">📤 Exportar</button>
-                </div>
+    <div class="container">
+        <div class="page-header">
+            <h1>Sistema de Gerenciamento de Hospedagens</h1>
+            <p>Visualize e gerencie suas reservas de hotel para a viagem</p>
+        </div>
+
+        <div id="success-notification" class="success-message">
+            Nome da cidade alterado com sucesso!
+        </div>
+
+        <section>
+            <h2 class="section-title">Hospedagens Confirmadas</h2>
+            <div id="confirmed-accommodations" class="city-grid">
+                <!-- Cities will be populated here -->
             </div>
-        </div>
-    </header>
+        </section>
 
-    <main class="container">
-        <div class="filters-bar">
-            <div class="flex gap-16 items-center">
-                <div class="form-group" style="margin-bottom: 0; min-width: 200px;">
-                    <label class="form-label" for="personFilter">Filtrar por pessoa:</label>
-                    <select id="personFilter" class="form-control" onchange="filterByPerson()">
-                        <option value="">Todas as pessoas</option>
-                    </select>
-                </div>
-                <div class="flex gap-8">
-                    <button class="btn btn--sm btn--outline" onclick="showAllCities()">Todas as cidades</button>
-                    <button class="btn btn--sm btn--secondary" onclick="showConfirmedOnly()">Apenas confirmadas</button>
-                </div>
+        <section>
+            <h2 class="section-title">Cidades Futuras</h2>
+            <div id="future-cities" class="city-grid">
+                <!-- Future cities will be populated here -->
             </div>
-        </div>
-
-        <div id="citiesContainer" class="city-grid">
-            <!-- Cities will be rendered here -->
-        </div>
-
-        <div class="export-section">
-            <h3>📊 Resumo da Viagem</h3>
-            <p id="tripSummary" style="margin-bottom: var(--space-16);"></p>
-            <button class="btn btn--primary" onclick="generateShareableLink()">🔗 Gerar Link Compartilhável</button>
-        </div>
-    </main>
-
-    <!-- Add/Edit Modal -->
-    <div id="addModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Nova Hospedagem</h3>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
-            </div>
-            <form id="accommodationForm">
-                <div class="form-group">
-                    <label class="form-label" for="cityName">Cidade:</label>
-                    <input type="text" id="cityName" class="form-control" required>
-                </div>
-                <div class="flex gap-16">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label" for="startDate">Data de início:</label>
-                        <input type="date" id="startDate" class="form-control" required>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label" for="endDate">Data de fim:</label>
-                        <input type="date" id="endDate" class="form-control" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="hotelName">Nome do Hotel:</label>
-                    <input type="text" id="hotelName" class="form-control" required>
-                </div>
-                <div class="flex gap-16">
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label" for="roomType">Tipo de Quarto:</label>
-                        <select id="roomType" class="form-control" required>
-                            <option value="">Selecione...</option>
-                            <option value="individual">Individual</option>
-                            <option value="duplo">Duplo</option>
-                            <option value="triplo">Triplo</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label class="form-label" for="roomStatus">Status:</label>
-                        <select id="roomStatus" class="form-control" required>
-                            <option value="confirmado">Confirmado</option>
-                            <option value="pendente">Pendente</option>
-                            <option value="sem dados">Sem dados</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="occupants">Ocupantes (separados por vírgula):</label>
-                    <input type="text" id="occupants" class="form-control" placeholder="Ex: João, Maria, Pedro">
-                </div>
-                <div class="flex gap-8 justify-between">
-                    <button type="button" class="btn btn--secondary" onclick="closeModal()">Cancelar</button>
-                    <button type="submit" class="btn btn--primary">Salvar</button>
-                </div>
-            </form>
-        </div>
+        </section>
     </div>
 
-    <!-- Person Filter Modal -->
-    <div id="personModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="personModalTitle">Hospedagens de</h3>
-                <button class="close-btn" onclick="closePersonModal()">&times;</button>
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal-overlay">
+        <div class="modal">
+            <h3>Editar Nome da Cidade</h3>
+            <div class="form-group">
+                <label for="city-name-input" class="form-label">Nome da cidade:</label>
+                <input type="text" id="city-name-input" class="form-control" placeholder="Digite o novo nome">
+                <div id="error-message" class="error-message" style="display: none;"></div>
             </div>
-            <div id="personStays" class="person-summary">
-                <!-- Person stays will be rendered here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Export Modal -->
-    <div id="exportModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Exportar Dados</h3>
-                <button class="close-btn" onclick="closeExportModal()">&times;</button>
-            </div>
-            <div class="flex flex-col gap-16">
-                <button class="btn btn--primary btn--full-width" onclick="exportToJSON()">📋 Copiar como JSON</button>
-                <button class="btn btn--secondary btn--full-width" onclick="exportToText()">📝 Copiar como Texto</button>
-                <button class="btn btn--outline btn--full-width" onclick="printSummary()">🖨️ Imprimir Resumo</button>
+            <div class="modal-buttons">
+                <button type="button" class="btn btn--secondary" onclick="closeEditModal()">Cancelar</button>
+                <button type="button" class="btn btn--primary" onclick="saveEditedCityName()">Salvar</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Global data store
-        let accommodations = {
-            cities: [],
-            people: [
-                "Lud", "Laura", "Fabiano", "Tia Cecília", "Eunice", "Lucas",
-                "Jacinto", "Eliana", "Rafael", "Mariana", "Marcus", "Luciana"
-            ]
-        };
-
-        let currentFilter = '';
-        let editingIndex = -1;
-
-        // Initialize with pre-loaded data
-        function initializeData() {
-            accommodations.cities = [
+        // Data storage (using JavaScript variables instead of localStorage due to sandbox restrictions)
+        let accommodationsData = {
+            hospedagens_confirmadas: [
                 {
-                    name: "Tóquio",
-                    startDate: "2025-02-23",
-                    endDate: "2025-03-02",
-                    status: "confirmado",
-                    hotels: [
+                    cidade: "Tóquio",
+                    data_inicio: "2025-02-23",
+                    data_fim: "2025-03-02",
+                    hoteis: [
                         {
-                            name: "Hotel Toyoko Inn Yashio Ekimae",
-                            period: "23/02 a 26/02",
-                            rooms: [
-                                { type: "triplo", occupants: ["Lud", "Laura", "Fabiano"], dates: "23/02 a 26/02" },
-                                { type: "individual", occupants: ["Tia Cecília"], dates: "23/02 a 26/02" },
-                                { type: "individual", occupants: ["Eunice"], dates: "23/02 a 26/02" },
-                                { type: "individual", occupants: ["Lucas"], dates: "23/02 a 26/02" },
-                                { type: "duplo", occupants: ["Jacinto", "Eliana"], dates: "23/02 a 26/02" },
-                                { type: "duplo", occupants: ["Rafael", "Mariana"], dates: "23/02 a 26/02" },
-                                { type: "duplo", occupants: ["Marcus", "Luciana"], dates: "23/02 a 26/02" }
+                            nome: "Hotel Toyoko Inn Yashio Ekimae",
+                            periodo: "23/02 a 26/02",
+                            quartos: [
+                                {
+                                    tipo: "triplo",
+                                    ocupantes: ["Lud", "Laura", "Fabiano"],
+                                    datas: "23/02 a 26/02"
+                                },
+                                {
+                                    tipo: "individual",
+                                    ocupantes: ["Tia Cecília"],
+                                    datas: "23/02 a 26/02"
+                                },
+                                {
+                                    tipo: "individual",
+                                    ocupantes: ["Eunice"],
+                                    datas: "23/02 a 26/02"
+                                },
+                                {
+                                    tipo: "individual",
+                                    ocupantes: ["Lucas"],
+                                    datas: "23/02 a 26/02"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Jacinto", "Eliana"],
+                                    datas: "23/02 a 26/02"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Rafael", "Mariana"],
+                                    datas: "23/02 a 26/02"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Marcus", "Luciana"],
+                                    datas: "23/02 a 26/02"
+                                }
                             ]
                         },
                         {
-                            name: "Hotel Okubo House",
-                            period: "26/02 a 02/03",
-                            rooms: [
-                                { type: "triplo", occupants: ["Lud", "Laura", "Fabiano"], dates: "26/02 a 02/03" }
+                            nome: "Hotel Okubo House",
+                            periodo: "26/02 a 02/03",
+                            quartos: [
+                                {
+                                    tipo: "triplo",
+                                    ocupantes: ["Lud", "Laura", "Fabiano"],
+                                    datas: "26/02 a 02/03"
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "Hakone",
-                    startDate: "2025-03-02",
-                    endDate: "2025-03-03",
-                    status: "confirmado",
-                    hotels: [
+                    cidade: "Hakone",
+                    data_inicio: "2025-03-02",
+                    data_fim: "2025-03-03",
+                    hoteis: [
                         {
-                            name: "Hotel Green Plaza Hakone",
-                            period: "02/03 a 03/03",
-                            rooms: [
-                                { type: "triplo", occupants: ["Marcus", "Luciana", "Lucas"], dates: "02/03 a 03/03" },
-                                { type: "triplo", occupants: ["Fabiano", "Lud", "Laura"], dates: "02/03 a 03/03" },
-                                { type: "duplo", occupants: ["Jacinto", "Eliana"], dates: "02/03 a 03/03" },
-                                { type: "duplo", occupants: ["Cecília", "Eunice"], dates: "02/03 a 03/03" },
-                                { type: "duplo", occupants: ["Rafael", "Mariana"], dates: "02/03 a 03/03" }
+                            nome: "Hotel Green Plaza Hakone",
+                            periodo: "02/03 a 03/03",
+                            quartos: [
+                                {
+                                    tipo: "triplo",
+                                    ocupantes: ["Marcus", "Luciana", "Lucas"],
+                                    datas: "02/03 a 03/03"
+                                },
+                                {
+                                    tipo: "triplo",
+                                    ocupantes: ["Fabiano", "Lud", "Laura"],
+                                    datas: "02/03 a 03/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Jacinto", "Eliana"],
+                                    datas: "02/03 a 03/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Cecília", "Eunice"],
+                                    datas: "02/03 a 03/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Rafael", "Mariana"],
+                                    datas: "02/03 a 03/03"
+                                }
                             ]
                         }
                     ]
                 },
                 {
-                    name: "Osaka",
-                    startDate: "2025-03-03",
-                    endDate: "2025-03-08",
-                    status: "confirmado",
-                    hotels: [
+                    cidade: "Osaka",
+                    data_inicio: "2025-03-03",
+                    data_fim: "2025-03-08",
+                    hoteis: [
                         {
-                            name: "Hotel Plaza Osaka",
-                            period: "03/03 a 08/03",
-                            rooms: [
-                                { type: "individual", occupants: ["Lucas"], dates: "03/03 a 08/03" },
-                                { type: "duplo", occupants: ["Jacinto", "Eliana"], dates: "03/03 a 08/03" },
-                                { type: "duplo", occupants: ["Cecília", "Eunice"], dates: "03/03 a 08/03" },
-                                { type: "duplo", occupants: ["Rafael", "Mariana"], dates: "03/03 a 08/03" },
-                                { type: "duplo", occupants: ["Marcus", "Luciana"], dates: "03/03 a 08/03" }
+                            nome: "Hotel Plaza Osaka",
+                            periodo: "03/03 a 08/03",
+                            quartos: [
+                                {
+                                    tipo: "individual",
+                                    ocupantes: ["Lucas"],
+                                    datas: "03/03 a 08/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Jacinto", "Eliana"],
+                                    datas: "03/03 a 08/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Cecília", "Eunice"],
+                                    datas: "03/03 a 08/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Rafael", "Mariana"],
+                                    datas: "03/03 a 08/03"
+                                },
+                                {
+                                    tipo: "duplo",
+                                    ocupantes: ["Marcus", "Luciana"],
+                                    datas: "03/03 a 08/03"
+                                }
                             ]
                         }
                     ]
-                },
-                {
-                    name: "Kumamoto",
-                    startDate: "2025-03-08",
-                    endDate: "2025-03-09",
-                    status: "sem dados",
-                    hotels: []
-                },
-                {
-                    name: "Quioto",
-                    startDate: "2025-03-09",
-                    endDate: "2025-03-11",
-                    status: "sem dados",
-                    hotels: []
-                },
-                {
-                    name: "Tóquio",
-                    startDate: "2025-03-11",
-                    endDate: "2025-03-14",
-                    status: "sem dados",
-                    hotels: []
-                },
-                {
-                    name: "Dubai",
-                    startDate: "2025-03-14",
-                    endDate: "2025-03-18",
-                    status: "sem dados",
-                    hotels: []
                 }
-            ];
+            ],
+            cidades_futuras: [
+                {
+                    nome: "Kumamoto",
+                    data_inicio: "2025-03-08",
+                    data_fim: "2025-03-09",
+                    status: "sem dados"
+                },
+                {
+                    nome: "Quioto",
+                    data_inicio: "2025-03-09",
+                    data_fim: "2025-03-11",
+                    status: "sem dados"
+                },
+                {
+                    nome: "Tóquio",
+                    data_inicio: "2025-03-11",
+                    data_fim: "2025-03-14",
+                    status: "sem dados"
+                },
+                {
+                    nome: "Dubai",
+                    data_inicio: "2025-03-14",
+                    data_fim: "2025-03-18",
+                    status: "sem dados"
+                }
+            ]
+        };
 
-            // Sort cities by start date
-            accommodations.cities.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-        }
+        // Current editing state
+        let currentEditingCity = null;
+        let currentEditingType = null; // 'confirmed' or 'future'
+        let currentEditingIndex = null;
 
         // Format date for display
         function formatDate(dateStr) {
             const date = new Date(dateStr);
-            return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit'
+            });
         }
 
-        // Get status class
-        function getStatusClass(status) {
-            switch (status) {
-                case 'confirmado': return 'status--success';
-                case 'pendente': return 'status--warning';
-                default: return 'status--info';
-            }
+        // Show success notification
+        function showSuccessNotification() {
+            const notification = document.getElementById('success-notification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
 
-        // Get status text
-        function getStatusText(status) {
-            switch (status) {
-                case 'confirmado': return 'Confirmado';
-                case 'pendente': return 'Pendente';
-                case 'sem dados': return 'Sem dados';
-                default: return status;
-            }
+        // Open edit modal
+        function openEditModal(cityName, type, index) {
+            currentEditingCity = cityName;
+            currentEditingType = type;
+            currentEditingIndex = index;
+
+            const modal = document.getElementById('edit-modal');
+            const input = document.getElementById('city-name-input');
+            const errorMessage = document.getElementById('error-message');
+
+            input.value = cityName;
+            errorMessage.style.display = 'none';
+            modal.classList.add('active');
+            input.focus();
         }
 
-        // Render cities
-        function renderCities(citiesToRender = null) {
-            const container = document.getElementById('citiesContainer');
-            const cities = citiesToRender || accommodations.cities;
+        // Close edit modal
+        function closeEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.classList.remove('active');
             
-            if (cities.length === 0) {
-                container.innerHTML = '<div class="no-data-message">Nenhuma cidade encontrada.</div>';
+            currentEditingCity = null;
+            currentEditingType = null;
+            currentEditingIndex = null;
+        }
+
+        // Validate city name
+        function validateCityName(newName, currentName, type, index) {
+            // Check if empty
+            if (!newName.trim()) {
+                return 'O nome da cidade não pode estar vazio.';
+            }
+
+            // Check for duplicates
+            const allCityNames = [];
+            
+            // Add confirmed accommodations
+            accommodationsData.hospedagens_confirmadas.forEach((city, i) => {
+                if (!(type === 'confirmed' && i === index)) {
+                    allCityNames.push(city.cidade.toLowerCase());
+                }
+            });
+            
+            // Add future cities
+            accommodationsData.cidades_futuras.forEach((city, i) => {
+                if (!(type === 'future' && i === index)) {
+                    allCityNames.push(city.nome.toLowerCase());
+                }
+            });
+
+            if (allCityNames.includes(newName.toLowerCase()) && newName.toLowerCase() !== currentName.toLowerCase()) {
+                return 'Já existe uma cidade com este nome.';
+            }
+
+            return null;
+        }
+
+        // Save edited city name
+        function saveEditedCityName() {
+            const input = document.getElementById('city-name-input');
+            const errorMessage = document.getElementById('error-message');
+            const newName = input.value.trim();
+
+            // Validate
+            const error = validateCityName(newName, currentEditingCity, currentEditingType, currentEditingIndex);
+            if (error) {
+                errorMessage.textContent = error;
+                errorMessage.style.display = 'block';
                 return;
             }
 
-            container.innerHTML = cities.map(city => {
-                const isFuture = city.status === 'sem dados';
-                const hotelsHtml = city.hotels.length > 0 ? 
-                    city.hotels.map(hotel => `
-                        <div class="hotel-card">
-                            <div class="hotel-name">${hotel.name}</div>
-                            <div class="city-dates">${hotel.period}</div>
-                            <div class="rooms-list">
-                                ${hotel.rooms.map(room => `
-                                    <div class="room-item">
-                                        <div>
-                                            <div class="room-type">${room.type}</div>
-                                            <div class="room-occupants">${room.occupants.join(', ')}</div>
-                                        </div>
-                                        <div class="city-dates">${room.dates}</div>
-                                    </div>
-                                `).join('')}
+            // Update data
+            if (currentEditingType === 'confirmed') {
+                accommodationsData.hospedagens_confirmadas[currentEditingIndex].cidade = newName;
+            } else if (currentEditingType === 'future') {
+                accommodationsData.cidades_futuras[currentEditingIndex].nome = newName;
+            }
+
+            // Update display
+            renderAccommodations();
+            renderFutureCities();
+
+            // Show success notification
+            showSuccessNotification();
+
+            // Close modal
+            closeEditModal();
+        }
+
+        // Render confirmed accommodations
+        function renderAccommodations() {
+            const container = document.getElementById('confirmed-accommodations');
+            container.innerHTML = '';
+
+            accommodationsData.hospedagens_confirmadas.forEach((city, cityIndex) => {
+                const card = document.createElement('div');
+                card.className = 'card city-card';
+
+                let hotelsHtml = '';
+                city.hoteis.forEach(hotel => {
+                    let roomsHtml = '';
+                    hotel.quartos.forEach(room => {
+                        roomsHtml += `
+                            <div class="room">
+                                <div class="room-type">${room.tipo}</div>
+                                <div class="room-occupants">
+                                    ${room.ocupantes.join(', ')}<br>
+                                    <small>${room.datas}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    hotelsHtml += `
+                        <div class="hotel">
+                            <div class="hotel-name">${hotel.nome}</div>
+                            <div class="hotel-period">${hotel.periodo}</div>
+                            <div class="room-grid">
+                                ${roomsHtml}
                             </div>
                         </div>
-                    `).join('') : 
-                    '<div class="no-data-message">Nenhum hotel cadastrado ainda</div>';
+                    `;
+                });
 
-                return `
-                    <div class="city-card card ${isFuture ? 'city-card--future' : ''}">
-                        <div class="card__body">
-                            <div class="city-header">
-                                <div>
-                                    <div class="city-title">${city.name}</div>
-                                    <div class="city-dates">${formatDate(city.startDate)} a ${formatDate(city.endDate)}</div>
-                                </div>
-                                <div class="status ${getStatusClass(city.status)}">
-                                    ${getStatusText(city.status)}
-                                </div>
-                            </div>
-                            <div class="hotels-list">
-                                ${hotelsHtml}
-                            </div>
+                card.innerHTML = `
+                    <div class="card__body">
+                        <div class="city-header">
+                            <h3 class="city-name">${city.cidade}</h3>
+                            <button class="edit-btn" onclick="openEditModal('${city.cidade}', 'confirmed', ${cityIndex})" title="Editar nome da cidade">
+                                ✏️
+                            </button>
+                        </div>
+                        <div class="period">
+                            ${formatDate(city.data_inicio)} a ${formatDate(city.data_fim)}
+                        </div>
+                        ${hotelsHtml}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Render future cities
+        function renderFutureCities() {
+            const container = document.getElementById('future-cities');
+            container.innerHTML = '';
+
+            accommodationsData.cidades_futuras.forEach((city, cityIndex) => {
+                const card = document.createElement('div');
+                card.className = 'card city-card future-city-card';
+
+                card.innerHTML = `
+                    <div class="card__body">
+                        <div class="city-header">
+                            <h3 class="city-name">${city.nome}</h3>
+                            <button class="edit-btn" onclick="openEditModal('${city.nome}', 'future', ${cityIndex})" title="Editar nome da cidade">
+                                ✏️
+                            </button>
+                        </div>
+                        <div class="period">
+                            ${formatDate(city.data_inicio)} a ${formatDate(city.data_fim)}
+                        </div>
+                        <div class="no-data">
+                            Hospedagens ainda não definidas
                         </div>
                     </div>
                 `;
-            }).join('');
-        }
 
-        // Initialize person filter dropdown
-        function initializePersonFilter() {
-            const select = document.getElementById('personFilter');
-            select.innerHTML = '<option value="">Todas as pessoas</option>' + 
-                accommodations.people.map(person => 
-                    `<option value="${person}">${person}</option>`
-                ).join('');
-        }
-
-        // Filter by person
-        function filterByPerson() {
-            const selectedPerson = document.getElementById('personFilter').value;
-            currentFilter = selectedPerson;
-            
-            if (!selectedPerson) {
-                renderCities();
-                return;
-            }
-
-            // Show modal with person's accommodations
-            showPersonModal(selectedPerson);
-        }
-
-        // Show person modal
-        function showPersonModal(personName) {
-            const modal = document.getElementById('personModal');
-            const title = document.getElementById('personModalTitle');
-            const container = document.getElementById('personStays');
-            
-            title.textContent = `Hospedagens de ${personName}`;
-            
-            // Find all stays for this person
-            const personStays = [];
-            accommodations.cities.forEach(city => {
-                city.hotels.forEach(hotel => {
-                    hotel.rooms.forEach(room => {
-                        if (room.occupants.includes(personName)) {
-                            personStays.push({
-                                city: city.name,
-                                hotel: hotel.name,
-                                roomType: room.type,
-                                dates: room.dates,
-                                roommates: room.occupants.filter(p => p !== personName),
-                                status: city.status
-                            });
-                        }
-                    });
-                });
+                container.appendChild(card);
             });
-            
-            if (personStays.length === 0) {
-                container.innerHTML = '<div class="no-data-message">Esta pessoa não está cadastrada em nenhuma hospedagem.</div>';
-            } else {
-                container.innerHTML = personStays.map(stay => `
-                    <div class="person-stay">
-                        <h4>${stay.city}</h4>
-                        <p><strong>${stay.hotel}</strong></p>
-                        <p>Quarto ${stay.roomType} • ${stay.dates}</p>
-                        ${stay.roommates.length > 0 ? 
-                            `<p><small>Acompanhantes: ${stay.roommates.join(', ')}</small></p>` : 
-                            '<p><small>Quarto individual</small></p>'
-                        }
-                        <div class="status ${getStatusClass(stay.status)}">
-                            ${getStatusText(stay.status)}
-                        </div>
-                    </div>
-                `).join('');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('edit-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
             }
-            
-            modal.classList.add('active');
-        }
-
-        // Show all cities
-        function showAllCities() {
-            currentFilter = '';
-            document.getElementById('personFilter').value = '';
-            renderCities();
-        }
-
-        // Show confirmed only
-        function showConfirmedOnly() {
-            const confirmedCities = accommodations.cities.filter(city => city.status === 'confirmado');
-            renderCities(confirmedCities);
-        }
-
-        // Show add modal
-        function showAddModal() {
-            editingIndex = -1;
-            document.getElementById('modalTitle').textContent = 'Nova Hospedagem';
-            document.getElementById('accommodationForm').reset();
-            document.getElementById('addModal').classList.add('active');
-        }
-
-        // Close modals
-        function closeModal() {
-            document.getElementById('addModal').classList.remove('active');
-        }
-
-        function closePersonModal() {
-            document.getElementById('personModal').classList.remove('active');
-        }
-
-        function closeExportModal() {
-            document.getElementById('exportModal').classList.remove('active');
-        }
-
-        // Handle form submission
-        document.getElementById('accommodationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                cityName: document.getElementById('cityName').value,
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value,
-                hotelName: document.getElementById('hotelName').value,
-                roomType: document.getElementById('roomType').value,
-                roomStatus: document.getElementById('roomStatus').value,
-                occupants: document.getElementById('occupants').value.split(',').map(s => s.trim()).filter(s => s)
-            };
-            
-            // Find or create city
-            let city = accommodations.cities.find(c => 
-                c.name === formData.cityName && 
-                c.startDate === formData.startDate
-            );
-            
-            if (!city) {
-                city = {
-                    name: formData.cityName,
-                    startDate: formData.startDate,
-                    endDate: formData.endDate,
-                    status: formData.roomStatus,
-                    hotels: []
-                };
-                accommodations.cities.push(city);
-                accommodations.cities.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-            }
-            
-            // Find or create hotel
-            let hotel = city.hotels.find(h => h.name === formData.hotelName);
-            if (!hotel) {
-                hotel = {
-                    name: formData.hotelName,
-                    period: `${formatDate(formData.startDate)} a ${formatDate(formData.endDate)}`,
-                    rooms: []
-                };
-                city.hotels.push(hotel);
-            }
-            
-            // Add room
-            hotel.rooms.push({
-                type: formData.roomType,
-                occupants: formData.occupants,
-                dates: `${formatDate(formData.startDate)} a ${formatDate(formData.endDate)}`
-            });
-            
-            // Update people list
-            formData.occupants.forEach(person => {
-                if (!accommodations.people.includes(person)) {
-                    accommodations.people.push(person);
-                }
-            });
-            
-            closeModal();
-            renderCities();
-            initializePersonFilter();
-            updateTripSummary();
         });
 
-        // Update trip summary
-        function updateTripSummary() {
-            const totalCities = accommodations.cities.length;
-            const confirmedCities = accommodations.cities.filter(c => c.status === 'confirmado').length;
-            const totalPeople = accommodations.people.length;
-            
-            let totalRooms = 0;
-            accommodations.cities.forEach(city => {
-                city.hotels.forEach(hotel => {
-                    totalRooms += hotel.rooms.length;
-                });
-            });
-            
-            document.getElementById('tripSummary').textContent = 
-                `${totalCities} cidades • ${confirmedCities} confirmadas • ${totalRooms} quartos • ${totalPeople} pessoas`;
-        }
+        // Handle Enter key in input
+        document.getElementById('city-name-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                saveEditedCityName();
+            }
+        });
 
-        // Export functions
-        function showExportModal() {
-            document.getElementById('exportModal').classList.add('active');
-        }
-
-        function exportToJSON() {
-            const dataStr = JSON.stringify(accommodations, null, 2);
-            navigator.clipboard.writeText(dataStr).then(() => {
-                alert('Dados copiados como JSON para a área de transferência!');
-                closeExportModal();
-            });
-        }
-
-        function exportToText() {
-            let textOutput = 'HOSPEDAGENS DA VIAGEM\n\n';
-            
-            accommodations.cities.forEach(city => {
-                textOutput += `${city.name.toUpperCase()} (${formatDate(city.startDate)} a ${formatDate(city.endDate)}) - ${getStatusText(city.status)}\n`;
-                
-                if (city.hotels.length === 0) {
-                    textOutput += '  Sem hotéis cadastrados\n\n';
-                    return;
-                }
-                
-                city.hotels.forEach(hotel => {
-                    textOutput += `  ${hotel.name} (${hotel.period})\n`;
-                    hotel.rooms.forEach(room => {
-                        textOutput += `    - Quarto ${room.type}: ${room.occupants.join(', ')} (${room.dates})\n`;
-                    });
-                });
-                textOutput += '\n';
-            });
-            
-            navigator.clipboard.writeText(textOutput).then(() => {
-                alert('Dados copiados como texto para a área de transferência!');
-                closeExportModal();
-            });
-        }
-
-        function printSummary() {
-            const printContent = document.getElementById('citiesContainer').innerHTML;
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Hospedagens da Viagem</title>
-                        <style>
-                            body { font-family: Arial, sans-serif; margin: 20px; }
-                            .city-card { border: 1px solid #ddd; margin-bottom: 20px; padding: 15px; border-radius: 8px; }
-                            .city-title { font-size: 24px; font-weight: bold; }
-                            .hotel-card { background: #f5f5f5; margin: 10px 0; padding: 10px; border-radius: 5px; }
-                            .room-item { margin: 5px 0; padding: 5px; background: #fff; border-radius: 3px; }
-                        </style>
-                    </head>
-                    <body>
-                        <h1>Hospedagens da Viagem - Japão & Dubai</h1>
-                        ${printContent}
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-            closeExportModal();
-        }
-
-        function generateShareableLink() {
-            const currentUrl = window.location.href;
-            const shareableData = btoa(JSON.stringify(accommodations));
-            const shareableUrl = `${currentUrl}?data=${shareableData}`;
-            
-            navigator.clipboard.writeText(shareableUrl).then(() => {
-                alert('Link compartilhável copiado para a área de transferência!\n\nObs: Este link contém todos os dados da viagem e pode ser enviado para outras pessoas visualizarem.');
-            });
-        }
+        // Handle Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && document.getElementById('edit-modal').classList.contains('active')) {
+                closeEditModal();
+            }
+        });
 
         // Initialize the application
         function init() {
-            initializeData();
-            renderCities();
-            initializePersonFilter();
-            updateTripSummary();
-            
-            // Check for shared data in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const sharedData = urlParams.get('data');
-            if (sharedData) {
-                try {
-                    accommodations = JSON.parse(atob(sharedData));
-                    renderCities();
-                    initializePersonFilter();
-                    updateTripSummary();
-                } catch (e) {
-                    console.error('Erro ao carregar dados compartilhados:', e);
-                }
-            }
+            renderAccommodations();
+            renderFutureCities();
         }
 
-        // Start the application
-        init();
+        // Start the application when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
