@@ -61,3 +61,5 @@ db.collection('dicas').orderBy('data', 'desc').onSnapshot(function(snapshot) {
     lista.appendChild(item);
   });
 });
+
+
