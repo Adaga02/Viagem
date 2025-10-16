@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gerenciamento de Hospedagens</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <style>
         :root {
   /* Primitive Color Tokens */
@@ -1110,13 +1113,83 @@ select.form-control {
             gap: var(--space-12);
             align-items: center;
         }
+
+        /* Firebase sync status styles */
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            padding: var(--space-8) var(--space-16);
+            background: var(--color-bg-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .sync-status.online {
+            background: var(--color-bg-3);
+            color: var(--color-success);
+        }
+
+        .sync-status.offline {
+            background: var(--color-bg-4);
+            color: var(--color-error);
+        }
+
+        .sync-status.syncing {
+            background: var(--color-bg-2);
+            color: var(--color-warning);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .sync-controls {
+            display: flex;
+            gap: var(--space-8);
+            align-items: center;
+        }
+
+        .user-count {
+            background: var(--color-bg-1);
+            padding: var(--space-4) var(--space-8);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            color: var(--color-text-secondary);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="page-header">
-            <h1>Sistema de Gerenciamento de Hospedagens</h1>
-            <p>Visualize e gerencie suas reservas de hotel para a viagem</p>
+            <div class="flex justify-between items-center" style="margin-bottom: var(--space-16);">
+                <div>
+                    <h1>Sistema de Gerenciamento de Hospedagens</h1>
+                    <p>Visualize e gerencie suas reservas de hotel para a viagem</p>
+                </div>
+                <div class="sync-controls">
+                    <div id="sync-status" class="sync-status offline">
+                        <div class="status-indicator"></div>
+                        <span id="status-text">Conectando...</span>
+                    </div>
+                    <div id="user-count" class="user-count" style="display: none;">
+                        <span id="user-count-text">0 usuários online</span>
+                    </div>
+                    <button id="manual-sync-btn" class="btn btn--sm btn--secondary" onclick="manualSync()" title="Sincronizar manualmente">
+                        🔄
+                    </button>
+                </div>
+            </div>
         </div>
 
         <div id="success-notification" class="success-message">
@@ -1133,7 +1206,12 @@ select.form-control {
 
         <!-- Toast de status de persistência -->
         <div id="persistence-status" class="success-message" style="display: none; background: var(--color-bg-3); color: var(--color-success);">
-            ✅ Sistema funcionando corretamente - dados estão sendo mantidos!
+            ✅ Sistema Firebase funcionando corretamente - dados sincronizados!
+        </div>
+
+        <!-- Toast para notificações especiais -->
+        <div id="special-notification" class="success-message" style="display: none; background: var(--color-bg-1); color: var(--color-primary);">
+            🎉 Atualização especial!
         </div>
 
         <section>
@@ -1263,6 +1341,21 @@ select.form-control {
     </div>
 
     <script>
+        // FIREBASE CONFIGURATION - Configuração obrigatória
+        const firebaseConfig = {
+            databaseURL: "https://travel-accommodation-default-rtdb.firebaseio.com/"
+        };
+
+        // Initialize Firebase
+        let database = null;
+        let dataRef = null;
+        let isFirebaseConnected = false;
+        let connectionCheckInterval = null;
+        let syncThrottle = null;
+        let lastSyncTime = 0;
+        let userPresenceRef = null;
+        let connectedUsersRef = null;
+        
         // ESTRUTURA DE DADOS CORRETA - Exatamente conforme especificado
         const DEFAULT_DATA = {
             cities: [
@@ -1341,62 +1434,313 @@ select.form-control {
             ]
         };
 
-        // SISTEMA DE PERSISTÊNCIA ROBUSTO (usando variáveis JavaScript)
+        // SISTEMA DE PERSISTÊNCIA COM FIREBASE
         let currentData = null;
         let isDataLoaded = false;
+        let isOnline = false;
+        let isSyncing = false;
 
-        // FUNÇÕES OBRIGATÓRIAS DE SAVE/LOAD (usando variáveis JavaScript)
-        function saveToMemory() {
+        // FIREBASE INITIALIZATION
+        function initializeFirebase() {
             try {
-                // Simular salvamento com feedback visual
-                showSavingIndicator();
+                firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                dataRef = database.ref('travel-accommodation/data');
                 
-                // Dados são mantidos em memória (JavaScript variables)
-                // Em ambiente de produção, seria substituído por storage API
+                // Setup connection monitoring
+                const connectedRef = database.ref('.info/connected');
+                connectedRef.on('value', function(snapshot) {
+                    isFirebaseConnected = snapshot.val() === true;
+                    updateConnectionStatus();
+                    
+                    if (isFirebaseConnected) {
+                        console.log('🔥 Firebase conectado!');
+                        setupRealtimeListener();
+                        setupUserPresence();
+                    } else {
+                        console.log('🔥 Firebase desconectado!');
+                    }
+                });
                 
-                showToast('✅ Dados salvos com sucesso!', 'success');
                 return true;
             } catch (error) {
-                console.error('Erro ao salvar:', error);
-                showToast('❌ Erro ao salvar dados!', 'error');
+                console.error('Erro ao inicializar Firebase:', error);
+                updateConnectionStatus();
                 return false;
             }
         }
 
-        function loadFromMemory() {
-            try {
-                // Em ambiente sandboxed, sempre carrega dados padrão
-                // Em produção, seria: const saved = window.storage.getItem('travel-data-v2');
+        // FIREBASE SAVE FUNCTION - Conforme especificado
+        function saveToFirebase(data) {
+            return new Promise((resolve, reject) => {
+                if (!dataRef) {
+                    reject(new Error('Firebase não inicializado'));
+                    return;
+                }
                 
-                return JSON.parse(JSON.stringify(DEFAULT_DATA));
+                const dataToSave = {
+                    cities: data.cities,
+                    lastUpdated: firebase.database.ServerValue.TIMESTAMP,
+                    version: "1.0"
+                };
+                
+                dataRef.set(dataToSave)
+                    .then(() => {
+                        console.log('✅ Dados salvos no Firebase');
+                        lastSyncTime = Date.now();
+                        resolve(true);
+                    })
+                    .catch((error) => {
+                        console.error('Erro ao salvar no Firebase:', error);
+                        reject(error);
+                    });
+            });
+        }
+
+        // FIREBASE LOAD FUNCTION
+        function loadFromFirebase() {
+            return new Promise((resolve, reject) => {
+                if (!dataRef) {
+                    reject(new Error('Firebase não inicializado'));
+                    return;
+                }
+                
+                dataRef.once('value')
+                    .then((snapshot) => {
+                        const data = snapshot.val();
+                        if (data && data.cities) {
+                            console.log('✅ Dados carregados do Firebase');
+                            resolve(data);
+                        } else {
+                            console.log('📋 Nenhum dado encontrado, usando padrão');
+                            resolve(DEFAULT_DATA);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Erro ao carregar do Firebase:', error);
+                        reject(error);
+                    });
+            });
+        }
+
+        // FALLBACK JAVASCRIPT VARIABLES (sandboxed environment safe)
+        let backupData = null;
+        
+        function saveToJavaScriptVariables() {
+            try {
+                // Usando variáveis JavaScript como fallback (sandboxed environment)
+                backupData = JSON.parse(JSON.stringify(currentData));
+                console.log('💾 Dados salvos no backup JavaScript');
+                return true;
             } catch (error) {
-                console.error('Erro ao carregar:', error);
-                return JSON.parse(JSON.stringify(DEFAULT_DATA));
+                console.error('Erro no backup JavaScript:', error);
+                return false;
             }
         }
 
-        // WRAPPER OBRIGATÓRIO - chama save após TODA modificação
+        function loadFromJavaScriptVariables() {
+            try {
+                return backupData ? JSON.parse(JSON.stringify(backupData)) : null;
+            } catch (error) {
+                console.error('Erro ao carregar backup JavaScript:', error);
+                return null;
+            }
+        }
+
+        // MASTER SAVE FUNCTION - Com Firebase + Fallback
+        async function saveData() {
+            if (isSyncing) return;
+            
+            isSyncing = true;
+            showSavingIndicator();
+            updateSyncStatus('syncing');
+            
+            try {
+                // Tentar salvar no Firebase primeiro
+                if (isFirebaseConnected) {
+                    await saveToFirebase(currentData);
+                    showToast('🔄 Sincronizado com sucesso!', 'success');
+                } else {
+                    throw new Error('Firebase desconectado');
+                }
+            } catch (error) {
+                console.warn('Firebase falhou, usando backup JavaScript:', error);
+                saveToJavaScriptVariables();
+                showToast('💾 Salvo em backup JavaScript (offline)', 'warning');
+            } finally {
+                isSyncing = false;
+                updateSyncStatus(isFirebaseConnected ? 'online' : 'offline');
+            }
+        }
+
+        // MASTER LOAD FUNCTION - Com Firebase + Fallback
+        async function loadData() {
+            if (isDataLoaded) return;
+            
+            try {
+                // Tentar carregar do Firebase primeiro
+                if (isFirebaseConnected) {
+                    const firebaseData = await loadFromFirebase();
+                    currentData = firebaseData;
+                } else {
+                    throw new Error('Firebase desconectado');
+                }
+            } catch (error) {
+                console.warn('Firebase falhou, tentando backup JavaScript:', error);
+                
+                // Tentar backup JavaScript
+                const jsBackupData = loadFromJavaScriptVariables();
+                if (jsBackupData) {
+                    currentData = jsBackupData;
+                    showToast('💾 Dados carregados do backup JavaScript', 'info');
+                } else {
+                    // Usar dados padrão
+                    currentData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                    showToast('📋 Usando dados padrão iniciais', 'info');
+                }
+            }
+            
+            isDataLoaded = true;
+            console.log('✅ Dados carregados:', currentData);
+        }
+
+        // WRAPPER OBRIGATÓRIO COM FIREBASE - chama save após TODA modificação
         function updateData(callback) {
             if (typeof callback === 'function') {
                 callback();
             }
-            saveToMemory();
-            renderApp();
+            
+            // Throttle inteligente para evitar muitas requisições
+            if (syncThrottle) clearTimeout(syncThrottle);
+            syncThrottle = setTimeout(async () => {
+                await saveDataEnhanced();
+                renderApp();
+            }, 800); // 800ms throttle otimizado
+        }
+
+        // CONNECTION STATUS MANAGEMENT
+        function updateConnectionStatus() {
+            const statusElement = document.getElementById('sync-status');
+            const statusText = document.getElementById('status-text');
+            
+            if (!statusElement || !statusText) return;
+            
+            if (isFirebaseConnected) {
+                statusElement.className = 'sync-status online';
+                statusText.textContent = 'Online';
+                isOnline = true;
+            } else {
+                statusElement.className = 'sync-status offline';
+                statusText.textContent = 'Offline';
+                isOnline = false;
+            }
+        }
+
+        function updateSyncStatus(status) {
+            const statusElement = document.getElementById('sync-status');
+            const statusText = document.getElementById('status-text');
+            
+            if (!statusElement || !statusText) return;
+            
+            statusElement.className = `sync-status ${status}`;
+            
+            switch (status) {
+                case 'syncing':
+                    statusText.textContent = 'Sincronizando...';
+                    break;
+                case 'online':
+                    statusText.textContent = 'Online';
+                    break;
+                case 'offline':
+                    statusText.textContent = 'Offline';
+                    break;
+            }
+        }
+
+        function updateUserCount(count) {
+            const userCountElement = document.getElementById('user-count');
+            const userCountText = document.getElementById('user-count-text');
+            
+            if (!userCountElement || !userCountText) return;
+            
+            if (count > 0) {
+                userCountElement.style.display = 'block';
+                userCountText.textContent = `${count} usuário${count !== 1 ? 's' : ''} online`;
+            } else {
+                userCountElement.style.display = 'none';
+            }
+        }
+
+        // MANUAL SYNC FUNCTION
+        async function manualSync() {
+            console.log('🔄 Sincronização manual solicitada');
+            
+            if (isSyncing) {
+                showToast('⚙️ Sincronização já em andamento...', 'info');
+                return;
+            }
+            
+            try {
+                if (isFirebaseConnected) {
+                    // Forçar recarregamento dos dados
+                    const firebaseData = await loadFromFirebase();
+                    currentData = firebaseData;
+                    renderApp();
+                    showToast('✅ Sincronização manual concluída!', 'success');
+                } else {
+                    showToast('❌ Não é possível sincronizar offline', 'error');
+                }
+            } catch (error) {
+                console.error('Erro na sincronização manual:', error);
+                showToast('❌ Erro na sincronização manual', 'error');
+            }
         }
 
         // Toast notifications
         function showToast(message, type) {
-            const toastId = type === 'success' ? 'success-notification' : 'error-notification';
+            let toastId;
+            switch (type) {
+                case 'success':
+                    toastId = 'success-notification';
+                    break;
+                case 'error':
+                    toastId = 'error-notification';
+                    break;
+                case 'info':
+                    toastId = 'success-notification';
+                    break;
+                case 'warning':
+                    toastId = 'error-notification';
+                    break;
+                default:
+                    toastId = 'success-notification';
+            }
+            
             const toast = document.getElementById(toastId);
             
             if (toast) {
                 toast.textContent = message;
+                
+                // Ajustar cor baseado no tipo
+                if (type === 'info') {
+                    toast.style.background = 'var(--color-bg-1)';
+                    toast.style.color = 'var(--color-primary)';
+                } else if (type === 'warning') {
+                    toast.style.background = 'var(--color-bg-2)';
+                    toast.style.color = 'var(--color-warning)';
+                }
+                
                 toast.style.display = 'block';
                 toast.classList.add('show');
                 
                 setTimeout(() => {
                     toast.classList.remove('show');
-                    setTimeout(() => toast.style.display = 'none', 300);
+                    setTimeout(() => {
+                        toast.style.display = 'none';
+                        // Reset colors
+                        toast.style.background = '';
+                        toast.style.color = '';
+                    }, 300);
                 }, 3000);
             }
         }
@@ -1413,13 +1757,92 @@ select.form-control {
             }
         }
 
-        // CARREGAMENTO DE DADOS OBRIGATÓRIO
-        function loadData() {
-            if (!isDataLoaded) {
-                currentData = loadFromMemory();
-                isDataLoaded = true;
-                console.log('✅ Dados carregados:', currentData);
-            }
+        // REALTIME LISTENER - Sincronização automática avançada
+        function setupRealtimeListener() {
+            if (!dataRef) return;
+            
+            dataRef.on('value', (snapshot) => {
+                const remoteData = snapshot.val();
+                if (!remoteData || !remoteData.cities) return;
+                
+                // Evitar loop infinito - só atualizar se os dados realmente mudaram
+                const currentDataString = JSON.stringify(currentData?.cities || []);
+                const remoteDataString = JSON.stringify(remoteData.cities || []);
+                
+                if (currentDataString !== remoteDataString) {
+                    console.log('🔄 Dados atualizados por outro usuário');
+                    
+                    // Resolver conflitos se necessário
+                    const resolvedData = resolveDataConflicts(currentData, remoteData);
+                    currentData = resolvedData;
+                    
+                    // Validar dados recebidos
+                    if (validateDataIntegrity()) {
+                        renderApp();
+                        showToast('🔄 Dados sincronizados!', 'info');
+                    } else {
+                        console.error('❌ Dados recebidos são inválidos, ignorando atualização');
+                        showToast('⚠️ Dados remotos inválidos', 'warning');
+                    }
+                }
+            });
+            
+            // Listen for connection errors
+            dataRef.on('disconnect', () => {
+                console.log('🔥 Firebase desconectado');
+                isFirebaseConnected = false;
+                updateConnectionStatus();
+            });
+        }
+
+        // USER PRESENCE SYSTEM AVANÇADO
+        function setupUserPresence() {
+            if (!database) return;
+            
+            const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+            const userAgent = navigator.userAgent;
+            const timestamp = Date.now();
+            
+            userPresenceRef = database.ref('travel-accommodation/users/' + userId);
+            connectedUsersRef = database.ref('travel-accommodation/users');
+            
+            // Set user as online with more info
+            const userInfo = {
+                online: true,
+                lastSeen: firebase.database.ServerValue.TIMESTAMP,
+                joinedAt: timestamp,
+                browser: userAgent.includes('Chrome') ? 'Chrome' : 
+                        userAgent.includes('Firefox') ? 'Firefox' :
+                        userAgent.includes('Safari') ? 'Safari' : 'Outro',
+                id: userId
+            };
+            
+            userPresenceRef.set(userInfo);
+            
+            // Remove user when they disconnect
+            userPresenceRef.onDisconnect().remove();
+            
+            // Listen for user count changes
+            connectedUsersRef.on('value', (snapshot) => {
+                const users = snapshot.val() || {};
+                const userCount = Object.keys(users).length;
+                updateUserCount(userCount);
+                
+                // Log active users for debug
+                console.log('👥 Usuários online:', Object.keys(users).length);
+                Object.values(users).forEach(user => {
+                    console.log(`  - ${user.id} (${user.browser})`);
+                });
+            });
+            
+            // Heartbeat to keep presence alive
+            setInterval(() => {
+                if (isFirebaseConnected && userPresenceRef) {
+                    userPresenceRef.update({
+                        lastSeen: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+            }, 30000); // Update every 30 seconds
         }
 
         // Função para renderizar toda a aplicação
@@ -2305,11 +2728,10 @@ select.form-control {
             }, 100);
         }
 
-        // Verificar integridade dos dados
+        // DATA VALIDATION & INTEGRITY CHECK
         function validateDataIntegrity() {
             if (!currentData || !currentData.cities || !Array.isArray(currentData.cities)) {
                 console.error('❌ ERRO: Estrutura de dados corrompida!');
-                currentData = loadFromLocalStorage();
                 return false;
             }
             
@@ -2320,10 +2742,152 @@ select.form-control {
                     console.error(`❌ ERRO: Cidade ${i} tem dados incompletos:`, city);
                     return false;
                 }
+                
+                // Validar estrutura dos hotéis
+                if (city.hotels && Array.isArray(city.hotels)) {
+                    for (let j = 0; j < city.hotels.length; j++) {
+                        const hotel = city.hotels[j];
+                        if (!hotel.name || !hotel.checkIn || !hotel.checkOut || !Array.isArray(hotel.rooms)) {
+                            console.error(`❌ ERRO: Hotel ${j} na cidade ${city.name} tem dados incompletos:`, hotel);
+                            return false;
+                        }
+                        
+                        // Validar estrutura dos quartos
+                        for (let k = 0; k < hotel.rooms.length; k++) {
+                            const room = hotel.rooms[k];
+                            if (!room.type || !Array.isArray(room.occupants) || !room.dates) {
+                                console.error(`❌ ERRO: Quarto ${k} no hotel ${hotel.name} tem dados incompletos:`, room);
+                                return false;
+                            }
+                        }
+                    }
+                }
             }
             
             console.log('✅ Integridade dos dados verificada com sucesso!');
             return true;
+        }
+
+        // CONFLICT RESOLUTION - Last write wins
+        function resolveDataConflicts(localData, remoteData) {
+            if (!localData || !remoteData) {
+                return remoteData || localData;
+            }
+            
+            // Comparar timestamps se disponíveis
+            const localTime = localData.lastUpdated || 0;
+            const remoteTime = remoteData.lastUpdated || 0;
+            
+            if (remoteTime > localTime) {
+                console.log('🔄 Resolvendo conflito: usando dados remotos (mais recentes)');
+                showToast('🔄 Dados atualizados por outro usuário', 'info');
+                return remoteData;
+            } else {
+                console.log('🔄 Resolvendo conflito: mantendo dados locais');
+                return localData;
+            }
+        }
+
+        // DATA COMPRESSION (optional optimization)
+        function compressData(data) {
+            try {
+                // Remover campos desnecessários para economizar banda
+                const compressed = {
+                    cities: data.cities.map(city => ({
+                        name: city.name,
+                        startDate: city.startDate,
+                        endDate: city.endDate,
+                        hotels: city.hotels?.map(hotel => ({
+                            name: hotel.name,
+                            checkIn: hotel.checkIn,
+                            checkOut: hotel.checkOut,
+                            rooms: hotel.rooms?.map(room => ({
+                                id: room.id,
+                                type: room.type,
+                                occupants: room.occupants,
+                                dates: room.dates
+                            }))
+                        })) || []
+                    }))
+                };
+                
+                return compressed;
+            } catch (error) {
+                console.error('Erro ao comprimir dados:', error);
+                return data;
+            }
+        }
+
+        // THROTTLED SYNC - Evita muitas requisições simultâneas
+        let syncQueue = [];
+        let isSyncQueueProcessing = false;
+        
+        function queueSync(operation) {
+            syncQueue.push(operation);
+            processSyncQueue();
+        }
+        
+        async function processSyncQueue() {
+            if (isSyncQueueProcessing || syncQueue.length === 0) return;
+            
+            isSyncQueueProcessing = true;
+            
+            while (syncQueue.length > 0) {
+                const operation = syncQueue.shift();
+                try {
+                    await operation();
+                    // Pequena pausa entre operações
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                } catch (error) {
+                    console.error('Erro na operação de sincronização:', error);
+                }
+            }
+            
+            isSyncQueueProcessing = false;
+        }
+
+        // ENHANCED SAVE WITH VALIDATION
+        async function saveDataEnhanced() {
+            if (isSyncing) {
+                console.log('⚠️ Sincronização já em andamento, adicionando à fila...');
+                return new Promise((resolve) => {
+                    queueSync(async () => {
+                        resolve(await saveDataEnhanced());
+                    });
+                });
+            }
+            
+            // Validar dados antes de salvar
+            if (!validateDataIntegrity()) {
+                console.error('❌ Não é possível salvar: dados inválidos');
+                showToast('❌ Erro: dados inválidos', 'error');
+                return false;
+            }
+            
+            isSyncing = true;
+            updateSyncStatus('syncing');
+            
+            try {
+                // Comprimir dados para otimizar transferência
+                const compressedData = compressData(currentData);
+                
+                if (isFirebaseConnected) {
+                    await saveToFirebase(compressedData);
+                    showToast('✅ Sincronizado!', 'success');
+                } else {
+                    throw new Error('Firebase desconectado');
+                }
+                
+                return true;
+            } catch (error) {
+                console.warn('Firebase falhou, usando backup JavaScript:', error);
+                saveToJavaScriptVariables();
+                showToast('💾 Salvo em backup JavaScript', 'warning');
+                return false;
+            } finally {
+                isSyncing = false;
+                updateSyncStatus(isFirebaseConnected ? 'online' : 'offline');
+            }
         }
 
         // Adicionar botão de teste manual
@@ -2340,48 +2904,98 @@ select.form-control {
         }
 
         // Initialize the application
-        function init() {
-            console.log('🚀 Iniciando Sistema de Hospedagens CORRIGIDO - Versão 2.0...');
+        async function init() {
+            console.log('🚀 Iniciando Sistema de Hospedagens COM FIREBASE - Versão 3.0...');
             
-            // OBRIGATÓRIO: Carregar dados salvos primeiro
-            loadData();
+            // ETAPA 1: Inicializar Firebase
+            updateSyncStatus('syncing');
+            const firebaseInitialized = initializeFirebase();
             
-            // Validar integridade dos dados
-            if (!validateDataIntegrity()) {
-                showToast('⚠️ Dados corrompidos! Recarregando dados padrão...', 'error');
-                currentData = loadFromMemory();
+            if (!firebaseInitialized) {
+                console.warn('⚠️ Firebase falhou, modo offline');
+                showToast('⚠️ Modo offline - dados locais apenas', 'warning');
             }
             
-            // Executar teste de persistência automático
-            testDataPersistence();
+            // ETAPA 2: Aguardar conexão e carregar dados
+            let retryCount = 0;
+            const maxRetries = 5;
             
-            // Renderizar interface
+            while (!isDataLoaded && retryCount < maxRetries) {
+                try {
+                    await loadData();
+                    break;
+                } catch (error) {
+                    retryCount++;
+                    console.warn(`Tentativa ${retryCount}/${maxRetries} de carregamento falhou:`, error);
+                    
+                    if (retryCount >= maxRetries) {
+                        console.warn('Máximo de tentativas atingido, usando dados padrão');
+                        currentData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                        isDataLoaded = true;
+                        showToast('📋 Usando dados padrão', 'info');
+                    } else {
+                        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+                    }
+                }
+            }
+            
+            // ETAPA 3: Validar integridade dos dados
+            if (!validateDataIntegrity()) {
+                showToast('⚠️ Dados corrompidos! Recarregando dados padrão...', 'error');
+                currentData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                await saveData(); // Salvar dados padrão
+            }
+            
+            // ETAPA 4: Executar teste de persistência
+            setTimeout(() => testDataPersistence(), 2000);
+            
+            // ETAPA 5: Renderizar interface
             renderApp();
             
-            // Adicionar botão de teste manual
+            // ETAPA 6: Adicionar botões de teste
             addTestButton();
             
-            console.log('✅ Sistema inicializado com sucesso!');
+            console.log('✅ Sistema Firebase inicializado com sucesso!');
             console.log('Dados atuais:', currentData);
+            console.log('Firebase conectado:', isFirebaseConnected);
             
             // Confirmar que o sistema está funcionando
-            showToast('🚀 Sistema de hospedagens carregado e funcionando!', 'success');
+            if (isFirebaseConnected) {
+                showToast('🚀 Sistema Firebase carregado - Sincronização em tempo real ativa!', 'success');
+            } else {
+                showToast('💾 Sistema em modo offline - Dados salvos localmente', 'warning');
+            }
         }
 
         // Log para debug
         function logCurrentState() {
-            console.log('=== ESTADO ATUAL DO SISTEMA ===');
+            console.log('=== ESTADO ATUAL DO SISTEMA FIREBASE ===');
             console.log('currentData:', currentData);
             console.log('isDataLoaded:', isDataLoaded);
+            console.log('isFirebaseConnected:', isFirebaseConnected);
+            console.log('isOnline:', isOnline);
+            console.log('isSyncing:', isSyncing);
+            console.log('lastSyncTime:', lastSyncTime ? new Date(lastSyncTime).toLocaleTimeString() : 'Nunca');
+            console.log('syncQueue length:', syncQueue.length);
             console.log('allPeople:', allPeople);
-            console.log('===============================');
+            console.log('Firebase URL:', firebaseConfig.databaseURL);
+            console.log('=========================================');
+            
+            // Mostrar resumo rápido no console
+            const citiesWithHotels = currentData?.cities?.filter(c => c.hotels?.length > 0)?.length || 0;
+            const totalHotels = currentData?.cities?.reduce((sum, city) => sum + (city.hotels?.length || 0), 0) || 0;
+            const totalRooms = currentData?.cities?.reduce((sum, city) => 
+                sum + (city.hotels?.reduce((hotelSum, hotel) => hotelSum + (hotel.rooms?.length || 0), 0) || 0), 0) || 0;
+            
+            console.log(`🏨 Resumo: ${citiesWithHotels} cidades com hospedagens, ${totalHotels} hotéis, ${totalRooms} quartos`);
         }
 
         // Start the application when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('📋 DOM Carregado - Iniciando aplicação...');
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('📋 DOM Carregado - Iniciando aplicação Firebase...');
             
-            init();
+            // Inicialização assíncrona
+            await init();
             setupOccupantAutocomplete();
             handleRoomTypeChange();
             setupModalListeners();
@@ -2390,13 +3004,52 @@ select.form-control {
             // Log do estado para debug
             logCurrentState();
             
-            // Adicionar listener para recarregamento de página (teste crítico)
+            // Adicionar listener para recarregamento de página
             window.addEventListener('beforeunload', function() {
-                console.log('🔄 Página sendo recarregada - Estado atual:', currentData);
+                console.log('🔄 Página sendo recarregada - Estado Firebase:', {
+                    currentData,
+                    isFirebaseConnected,
+                    isOnline,
+                    lastSyncTime
+                });
+                
+                // Cleanup Firebase listeners
+                if (userPresenceRef) {
+                    userPresenceRef.off();
+                }
+                if (connectedUsersRef) {
+                    connectedUsersRef.off();
+                }
+                if (dataRef) {
+                    dataRef.off();
+                }
             });
             
-            console.log('✅ Aplicação totalmente carregada!');
+            // Mostrar notificação de sistema pronto
+            setTimeout(() => {
+                if (isFirebaseConnected) {
+                    showSpecialNotification('🚀 Sistema Firebase iniciado - Colaboração em tempo real ativa!');
+                } else {
+                    showSpecialNotification('💾 Sistema iniciado em modo offline - Dados locais ativos');
+                }
+            }, 3000);
+            
+            console.log('✅ Aplicação Firebase totalmente carregada!');
         });
+        
+        // Função para notificações especiais
+        function showSpecialNotification(message) {
+            const notification = document.getElementById('special-notification');
+            if (notification) {
+                notification.textContent = message;
+                notification.style.display = 'block';
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => notification.style.display = 'none', 300);
+                }, 4000);
+            }
+        }
     </script>
 </body>
 </html>
